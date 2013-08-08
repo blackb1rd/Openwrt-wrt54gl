@@ -1,0 +1,119 @@
+10
+
+dir
+37739
+svn://svn.openwrt.org/openwrt/branches/8.09/target/linux
+svn://svn.openwrt.org/openwrt
+
+
+
+2009-11-17T21:53:50.355193Z
+18443
+nico
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3c298f89-4303-0410-b956-a3cf2f4a3e73
+
+ixp4xx
+dir
+
+atheros
+dir
+
+au1000
+dir
+
+rdc
+dir
+
+adm5120
+dir
+
+Makefile
+file
+
+
+
+
+2013-08-08T16:15:33.120829Z
+4a3c6e549c402779f6bbd7aee0226372
+2008-08-16T16:59:47.321205Z
+12322
+nbd
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+365
+
+generic-2.4
+dir
+
+brcm47xx
+dir
+
+ppc40x
+dir
+
+generic-2.6
+dir
+
+ifxmips
+dir
+
+ppc44x
+dir
+
+brcm-2.4
+dir
+
+x86
+dir
+
+magicbox
+dir
+
+ar7
+dir
+
+ar71xx
+dir
+
+uml
+dir
+
+rb532
+dir
+
+avr32
+dir
+
