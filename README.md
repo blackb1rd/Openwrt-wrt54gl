@@ -1,6 +1,6 @@
 Openwrt-wrt54gl
 ===================
-This project based on kamikaze(revision 37739) and development for kernel 2.4(brcm-2.4)
+This project based on kamikaze(revision 18801) and development for kernel 2.4(brcm-2.4)
 
 Why kernel 2.4?
 ===================
