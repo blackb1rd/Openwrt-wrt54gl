@@ -1,13 +1,13 @@
 /*==============================================================================
  * spi.c - routines that communicate with the card using spi
- * 
+ *
  * Methods in this file perform all I/O with the card.
  *
  * This file is broken into 2 sections:
  *
  * 1) Unoptimized methods
- *    
- *    -Methods that have not been optimized for maximum performance. 
+ *
+ *    -Methods that have not been optimized for maximum performance.
  *
  *    -Honour the maximum frequency setting (if set).
  *
@@ -15,7 +15,7 @@
  *     during card initialization.
  *
  * 2) Optimized methods
- *    
+ *
  *    -Methods that have been optimized for maximum performance.
  *
  *    -Don't honour the maximum frequency setting and are coded to run as fast
@@ -49,7 +49,7 @@
  *    -Optimized methods are suffixed with "_o" to make them easy to identify.
  *    -Variants of methods that return no (void) value are suffixed with "_v".
  *    -Only variables used exclusively by methods in this module are defined here.
- *     All begin with "spi_". 
+ *     All begin with "spi_".
  *============================================================================*/
 
 // Handy to turn off inlining globally when analyzing generated MIPS assembler code
@@ -59,15 +59,15 @@
 static int spi_init(void);
 static int spi_freq_max(int);
 static void spi_freq_wait(cycles_t);
-static void spi_cs_ass(void); 
-static void spi_cs_dea(void); 
+static void spi_cs_ass(void);
+static void spi_cs_dea(void);
 static unsigned char spi_io(unsigned char);
 static unsigned char spi_card_cmd_r(unsigned char, unsigned int, unsigned char, unsigned char *, int);
 static unsigned char spi_card_read_blk(unsigned char, unsigned int, unsigned char, unsigned char *, int);
 
 // Function prototypes - optimized functions
-static inline void spi_cs_ass_o(void); 
-static inline void spi_cs_dea_o(void); 
+static inline void spi_cs_ass_o(void);
+static inline void spi_cs_dea_o(void);
 static inline void spi_io_ff_v_o(void);
 static inline void spi_io_2ff_v_o(void);
 static inline void spi_io_6ff_v_o(void);
@@ -77,7 +77,7 @@ static inline unsigned char spi_card_write_multi_o(unsigned int, unsigned char *
 static inline unsigned char spi_card_read_multi_o(unsigned int, unsigned char *, int, unsigned char, unsigned char);
 
 // Variables used to set GPIO port state (cs low = asserted)
-static unsigned char spi_ps_d0_c1;                      // data low, clock hi, cs low 
+static unsigned char spi_ps_d0_c1;                      // data low, clock hi, cs low
 static unsigned char spi_ps_d0_c0;                      // data low, clock low, cs low
 static unsigned char spi_ps_d1_c1;                      // data hi, clock hi, cs low
 static unsigned char spi_ps_d1_c0;                      // data hi, clock low, cs low
@@ -99,7 +99,7 @@ static cycles_t spi_clk_last = 0;                       // time of last clock tr
 
 /*------------------------------------------------------------------------------
  * spi_init
- * 
+ *
  * Initialize spi hardware - specify which IO pins used for SPI communications
  *
  * Set the required state, IO mode, and control mode for SPI.
@@ -161,7 +161,7 @@ static int spi_freq_max(int freq) {
  * frequency remains below the set maximum.
  *
  * Notes:
- * 
+ *
  *   -spi_clk_last is global. It is also set in the spi_cs_ass method...
  *----------------------------------------------------------------------------*/
 static void spi_freq_wait(cycles_t wait) {
@@ -178,7 +178,7 @@ static void spi_freq_wait(cycles_t wait) {
 
         // Now wait until that future time - handle overflow...
         if (future < now) {
-            // Value overflowed - wait till now <= future 
+            // Value overflowed - wait till now <= future
             while (get_cycles() > future) ;
         }
         while (get_cycles() < future) ;
@@ -232,17 +232,17 @@ static unsigned char spi_io(unsigned char data_out) {
     volatile unsigned char * in = gpio_input;
     unsigned char r = 0;
     int i;
-  
+
     for (i = 7; i >= 0; i--) {
 
-        // Set data bit appropriately and toggle clock hi 
+        // Set data bit appropriately and toggle clock hi
         if (data_out & (1 << i)) {
             *out |= spi_di_mask;
         } else {
             *out &= ~spi_di_mask;
         }
         *out |= spi_cl_mask;
-    
+
         // read data from card...
         r <<= 1;
         r |= ((*in & spi_do_mask) ? 1 : 0);
@@ -250,9 +250,9 @@ static unsigned char spi_io(unsigned char data_out) {
         // toggle clock low
         if (spi_clk_delay) spi_freq_wait(spi_clk_delay);
         *out &= ~spi_cl_mask;
-    
+
     }
-  
+
     return r;
 }
 
@@ -262,18 +262,18 @@ static unsigned char spi_io(unsigned char data_out) {
  *
  * Send a command and retrieve the command response
  *
- * Supports commands that return r1, r3 and r7 response formats. 
+ * Supports commands that return r1, r3 and r7 response formats.
  *
- * The first byte of the response (the r1 data) is the subroutine return value. 
- * If executing commands that return additional bytes in the response (r3 and r7 formats), 
- * pass a buffer and the additional number of bytes to read in the buf and len values. 
+ * The first byte of the response (the r1 data) is the subroutine return value.
+ * If executing commands that return additional bytes in the response (r3 and r7 formats),
+ * pass a buffer and the additional number of bytes to read in the buf and len values.
  *
  * Notes: Complete
  *----------------------------------------------------------------------------*/
 static unsigned char spi_card_cmd_r(unsigned char cmd, unsigned int param, unsigned char crc7, unsigned char *buf, int len) {
     int i;
     unsigned char r = 0;
-  
+
     // Assert CS
     spi_cs_ass();
 
@@ -295,7 +295,7 @@ static unsigned char spi_card_cmd_r(unsigned char cmd, unsigned int param, unsig
     for (i = 0; i < len; i++) buf[i] = spi_io(0xff);
 
     spi_cs_dea();
-  
+
     return r;
 }
 
@@ -311,7 +311,7 @@ static unsigned char spi_card_read_blk(unsigned char cmd, unsigned int param, un
 
     // Assert CS
     spi_cs_ass();
-  
+
     // send command, arguments, crc
     spi_io(0x40 | cmd);
     spi_io(param>>24);
@@ -334,7 +334,7 @@ static unsigned char spi_card_read_blk(unsigned char cmd, unsigned int param, un
     }
     if (r != 0xfe) goto err1;
 
-    // Read in data 
+    // Read in data
     for (i = 0; i < len; i++) buf[i] = spi_io(0xff);
 
     // Read and discard the data packet crc bytes
@@ -343,7 +343,7 @@ static unsigned char spi_card_read_blk(unsigned char cmd, unsigned int param, un
 
     // Deassert CS - send 8 bits to release DO
     spi_cs_dea();
-  
+
     return 0;
 
 err1:
@@ -376,7 +376,7 @@ static INLINE void spi_cs_ass_o(void) {
 
 
 /*------------------------------------------------------------------------------
- * spi_cs_dea_o 
+ * spi_cs_dea_o
  *
  * Deassert CS signal. Send 8 clocks to release DO.
  *
@@ -434,7 +434,7 @@ static INLINE void spi_io_ff_v_o(void) {
  *
  * Notes:
  *
- *   - Ever so slightly more efficient than calling spi_io_ff_v_o 2 times 
+ *   - Ever so slightly more efficient than calling spi_io_ff_v_o 2 times
  *----------------------------------------------------------------------------*/
 static INLINE void spi_io_2ff_v_o(void) {
     volatile unsigned char * out = gpio_output;
@@ -467,7 +467,7 @@ static INLINE void spi_io_2ff_v_o(void) {
  *
  * Notes:
  *
- *   - Ever so slightly more efficient than calling spi_io_ff_v_o 6 times 
+ *   - Ever so slightly more efficient than calling spi_io_ff_v_o 6 times
  *----------------------------------------------------------------------------*/
 static INLINE void spi_io_6ff_v_o(void) {
     volatile unsigned char * out = gpio_output;
@@ -596,7 +596,7 @@ static INLINE unsigned int spi_io_4ff_o(void) {
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
-    *out = clk_low; *out=clk_hi; r |= (*in & do_mask); 
+    *out = clk_low; *out=clk_hi; r |= (*in & do_mask);
     r >>= do_pin; w |= r; r = 0;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
@@ -605,7 +605,7 @@ static INLINE unsigned int spi_io_4ff_o(void) {
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
-    *out = clk_low; *out=clk_hi; r |= (*in & do_mask); 
+    *out = clk_low; *out=clk_hi; r |= (*in & do_mask);
     r >>= do_pin; r <<= 8; w |= r; r = 0;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
@@ -614,7 +614,7 @@ static INLINE unsigned int spi_io_4ff_o(void) {
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
-    *out = clk_low; *out=clk_hi; r |= (*in & do_mask); 
+    *out = clk_low; *out=clk_hi; r |= (*in & do_mask);
     r >>= do_pin; r <<= 16; w |= r; r = 0;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
@@ -623,7 +623,7 @@ static INLINE unsigned int spi_io_4ff_o(void) {
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
     *out = clk_low; *out=clk_hi; r |= (*in & do_mask); r <<= 1;
-    *out = clk_low; *out=clk_hi; r |= (*in & do_mask); 
+    *out = clk_low; *out=clk_hi; r |= (*in & do_mask);
     r >>= do_pin; r <<= 24; w |= r;
 
     return w;
@@ -718,7 +718,7 @@ static INLINE unsigned char spi_card_write_multi_o(unsigned int addr, unsigned c
         // write start of data token
         spi_io_v_o(0xfc);
 
-        // write data block 
+        // write data block
         for (i = 0; i < 512; i++) {
             spi_io_v_o(*p);
             *p++;
@@ -740,7 +740,7 @@ static INLINE unsigned char spi_card_write_multi_o(unsigned int addr, unsigned c
             else
                 err = r & 0x0f;
             break;
-        } 
+        }
 
         // Busy state follows data response token (dout pulled low).
         // Keep the clock running until it's done..
@@ -786,7 +786,7 @@ static INLINE unsigned char spi_card_write_multi_o(unsigned int addr, unsigned c
 
         spi_cs_dea_o();
     }
-  
+
     return err;
 }
 
@@ -860,12 +860,12 @@ static INLINE unsigned char spi_card_read_multi_o(unsigned int addr, unsigned ch
         LOG_DEBUG(DBG_BUSY, "Read_multi: Data token busy: %d clock cycles\n",i * 8);
 
         // Read in data block a word at a time. Reduce looping overhead by doing
-        // multiple reads per an iteration of the loop. 
+        // multiple reads per an iteration of the loop.
         for (i = 0; i < 512/4/4; i++) {
-            *p = spi_io_4ff_o(); p++; 
-            *p = spi_io_4ff_o(); p++; 
-            *p = spi_io_4ff_o(); p++; 
-            *p = spi_io_4ff_o(); p++; 
+            *p = spi_io_4ff_o(); p++;
+            *p = spi_io_4ff_o(); p++;
+            *p = spi_io_4ff_o(); p++;
+            *p = spi_io_4ff_o(); p++;
         }
 
         // Read and discard the data packet crc bytes
@@ -906,7 +906,7 @@ static INLINE unsigned char spi_card_read_multi_o(unsigned int addr, unsigned ch
 
         spi_cs_dea_o();
     }
-  
+
     return err;
 
 err2:

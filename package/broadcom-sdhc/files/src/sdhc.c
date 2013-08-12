@@ -1,6 +1,6 @@
 /*==============================================================================
  * sdhc.c - Linksys WRT54G/WRT54GS/WRT54GL hardware mod - SDHC/MMHC card driver
- * 
+ *
  * Version: 2.0.2
  *
  * Authors:
@@ -31,21 +31,21 @@
  *            Keep it smaller if you expect frequent concurrent IO to the card (reading/writing
  *            of multiple files at the same time). Experiment with the setting to see what
  *            works best for your system.
- *          
+ *
  *   dbg    - Only valid if you load the debug version of the kernel module (default 0).
- *            Bit flags that specify what debugging to product to the system log: 
+ *            Bit flags that specify what debugging to product to the system log:
  *
  *            1  - Card initialization trace
  *            2  - Calls to module "open" function
  *            3  - Calls to module "release" function
  *            4  - Calls to module "check_change" function
  *            5  - Calls to module "revalidate" function
- *            6  - Calls to module "request" function 
+ *            6  - Calls to module "request" function
  *            7  - Calls to module "ioctl" function
  *            8  - Print "busy wait" information
  *
- *  gpio_input    - Set the gpio register memory locations. 
- *  gpio_output     Allows defaults to be overridden when testing driver 
+ *  gpio_input    - Set the gpio register memory locations.
+ *  gpio_output     Allows defaults to be overridden when testing driver
  *  gpio_enable     on other broadcom based devices.
  *  gpio_control
  *
@@ -55,7 +55,7 @@
  *   Reported working on:
  *
  *     - WRT54GL V1.1
- *   
+ *
  * Supported mc/sd cards.
  *
  *   Tested using the folowing cards:
@@ -112,7 +112,7 @@ static unsigned int major = 0;                          // Device major number (
 #ifdef DEBUG                                            // Defined via compiler argument
 // Debug flag - bit symbols
 #define DBG_INIT        (1 << 0)                        // 1
-#define DBG_OPEN        (1 << 1)                        // 2 
+#define DBG_OPEN        (1 << 1)                        // 2
 #define DBG_RLSE        (1 << 2)                        // 4
 #define DBG_CHG         (1 << 3)                        // 8
 #define DBG_REVAL       (1 << 4)                        // 16
@@ -342,7 +342,7 @@ int sdhc_revalidate(kdev_t i_rdev) {
         LOG_DEBUG(DBG_REVAL, "revalidate: no device\n");
         return -ENODEV;
     }
-        
+
     LOG_DEBUG(DBG_REVAL, "revalidate: device=%d\n", DEVICE_NR(i_rdev));
 
     // Invalidate all partitions for device
@@ -399,7 +399,7 @@ static void sdhc_request(request_queue_t *q) {
             if (!(card->type & CARD_TYPE_HC)) card_address <<= 9;       // Multiply by 512 if byte addressing
 
             LOG_DEBUG(DBG_REQ, "Request: cmd=%02x sector=%08x nr_sectors=%08x minor=%02x start_sect=%08x card_address=%08x\n", cmd, sector, nr_sectors, MINOR(req->rq_dev), part_sector, card_address);
-                    
+
             if (!(card->state & CARD_STATE_DET)) {
                 LOG_ERR("Request: IO request but no MM/SD card detected!\n");
                 code = 0;
@@ -470,7 +470,7 @@ static ssize_t sdhc_proc_read(struct file *file, char *buf, size_t count, loff_t
         }
     }
 
-    len = sprintf(page, 
+    len = sprintf(page,
         "Card Type      : %s%s\n"
         "Spec Version   : %s\n"
         "Card Size      : %d MB\n"
@@ -550,14 +550,14 @@ int sdhc_init(void) {
     }
     p->proc_fops = &sdhc_proc_fops;
 
-    // Register block device. Creates entry in /proc/devices and assigns device major num 
+    // Register block device. Creates entry in /proc/devices and assigns device major num
     r = register_blkdev(MAJOR_NR, DEVICE_NAME, &sdhc_bdops);
     if (r < 0) {
         LOG_ERR("Failure requesting major %d - rc=%d\n", MAJOR_NR, r);
         goto err1;
     }
     if (MAJOR_NR == 0) {
-        MAJOR_NR = r;                           // If requested major was 0, assign dynamic major num 
+        MAJOR_NR = r;                           // If requested major was 0, assign dynamic major num
         LOG_INFO("Assigned dynamic major number %d\n", major);
     }
     sdhc_gendisk.major = MAJOR_NR;              // Can now set major number in gendisk structure
@@ -574,7 +574,7 @@ int sdhc_init(void) {
     hardsect_size[MAJOR_NR] = sdhc_hardsectsizes;
     max_sectors[MAJOR_NR] = sdhc_maxsect;
     sdhc_devdir[0] = devfs_mk_dir(NULL, DEVICE_NAME, NULL);
-    
+
 
     // Initialize the block request queue
     blk_init_queue(BLK_DEFAULT_QUEUE(MAJOR_NR), sdhc_request);
@@ -614,8 +614,8 @@ void sdhc_exit(void) {
 /*-----------------------------------------------------------------------------
  * Specify the functions to call for module initialization and exit
  *-----------------------------------------------------------------------------*/
-module_init(sdhc_init); 
-module_exit(sdhc_exit); 
+module_init(sdhc_init);
+module_exit(sdhc_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("madsuk/Rohde/Cyril CATTIAUX/Marc DENTY/rcichielo KRUSCH/Chris");

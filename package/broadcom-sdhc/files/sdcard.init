@@ -13,7 +13,7 @@ EXTRA_COMMANDS="status test overlay_root"
 EXTRA_HELP="\
         status  Show service status and card details
         test    Test write/read speed of card
-   overlay_root to overlay root / with /sdcard, add 
+   overlay_root to overlay root / with /sdcard, add
 
 [ -x ${initscript} ] && ${initscript} overlay_root > /$(basename $initscript).log
 
@@ -104,12 +104,12 @@ Are the gpio's properly configured in '${config}'?"
                 exit 1;
         fi
         echo "sdcard - Card detected and initialized"
-        
+
         # Check and load fs modules
         load_fsmodules ${fsmodules}
-        
-        # Mount it if requested.        
-        if [ "${partition:-z}" != "z" ] && [ "${mountpoint:-z}" != "z" ] ; then 
+
+        # Mount it if requested.
+        if [ "${partition:-z}" != "z" ] && [ "${mountpoint:-z}" != "z" ] ; then
                 [ -d ${mountpoint} ] || mkdir ${mountpoint}
                 mount ${device}/part${partition} ${mountpoint}
                 if [ "$?" -gt "0" ]; then
@@ -165,7 +165,7 @@ load_fsmodules () {
 overlay_root() {
         # start sdcard
         ${initscript} start
-        
+
         # check if root already overlayed
         overlays=$(mount|grep -e "^mini_fo:[^ ]\+ on / type mini_fo")
         if [ -n "$overlays" ] ; then
@@ -174,7 +174,7 @@ There is already a filesystem overlaying root fs: \n$overlays
 mini_fo only supports one overlay layer. Will not overlay this filesystem."
                 exit 1
         fi
-        
+
         # if mount exists now overlay root with it
         if [ "${mountpoint:-z}" != "z" ] && (mount|grep -q ${mountpoint}) ; then
                 . /sbin/firstboot

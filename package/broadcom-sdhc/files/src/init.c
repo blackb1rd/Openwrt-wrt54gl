@@ -1,6 +1,6 @@
 /*==============================================================================
  * init.c - routines responsible for initializing SD/MM card.
- * 
+ *
  * Methods in this file handle the initization of the media card.
  *
  * Initialization must typcially be done at a reduced frequency (under 400khz)
@@ -40,7 +40,7 @@ struct card_info {
     unsigned char      manid;           // Manufacturer ID
     unsigned char      appid[2];        // OEM/Application ID
     unsigned char      name[6];         // Product Name
-    unsigned char      rev;             // Product Revision      
+    unsigned char      rev;             // Product Revision
     unsigned int       year;            // Product Date - year
     unsigned char      month;           // Product Date - month
     unsigned int       serial;          // Product serial number - can use to detect card change
@@ -56,7 +56,7 @@ static int init_card(struct card_info **);
 /*-----------------------------------------------------------------------------
  * Run through initialization sequence for a MM card.
  *
- * Pre-condition: 
+ * Pre-condition:
  *
  *    Card power on clock cycles and CMD0 complete - card in SPI mode.
  *
@@ -66,7 +66,7 @@ static int init_card(struct card_info **);
  *    1 - Unexpected error encountered
  *
  * Notes:
- * 
+ *
  *-----------------------------------------------------------------------------*/
 static int init_card_mm(struct card_info *c) {
     unsigned char r = 0;        // response
@@ -97,7 +97,7 @@ static int init_card_mm(struct card_info *c) {
         return -EACCES;
     }
 
-    // Send CMD1 to start MM card initialization. 
+    // Send CMD1 to start MM card initialization.
     // Continue to poll until idle state bit is clear.
     LOG_DEBUG(DBG_INIT, "init MM: CMD1 - card initialization...\n");
     for (i = 0; i < 100000; i++) {
@@ -161,7 +161,7 @@ static int init_card_mm(struct card_info *c) {
     //
     //    C_Size      - 12 bits - [73:62]
     //    C_Size_Mult -  3 bits - [49:47]
-    //    Read_Bl_Len -  4 bits - [83:80] 
+    //    Read_Bl_Len -  4 bits - [83:80]
     //
     //    Capacity (bytes) = (C_Size + 1) * ( 2 ^ (C_Size_Mult + 2)) * (2 ^ Read_Bl_Len)
     //
@@ -173,7 +173,7 @@ static int init_card_mm(struct card_info *c) {
     //
     unsigned int Blocks;
     if ( ((ocr[0] & 0x60) >> 5) != 2) {
-        
+
         // Standard Capacity
         unsigned int C_Size      = ((csd[6] & 0x03) << 10) | (csd[7] << 2) | ((csd[8] >>6) & 0x03);
         unsigned int C_Size_Mult = ((csd[9] & 0x03) << 1) | ((csd[10] >> 7) & 0x01);
@@ -181,7 +181,7 @@ static int init_card_mm(struct card_info *c) {
         Blocks = ((C_Size + 1) * (1 << (C_Size_Mult + 2)) * (1 << Read_Bl_Len)) / 512;
 
     } else {
-        
+
         // High Capacity - Use Sec_Count from extended CSD
         Blocks = ((ext_csd[296] << 24) | (ext_csd[297] << 16) | (ext_csd[298] << 8) | csd[299]);
     }
@@ -216,7 +216,7 @@ err_proto:
 /*-----------------------------------------------------------------------------
  * Run through initialization sequence for an SD card.
  *
- * Pre-condition: 
+ * Pre-condition:
  *
  *    Card power on clock cycles and CMD0 complete - card in SPI mode.
  *
@@ -277,7 +277,7 @@ static int init_card_sd(struct card_info *c) {
         return -EACCES;
     }
 
-    // Send ACMD41 to start SD card initialization. 
+    // Send ACMD41 to start SD card initialization.
     // If CMD8 was successful, set HCS bit in arg to indicate host supports high capacity card.
     // Continue to poll until idle state bit is clear.
     LOG_DEBUG(DBG_INIT, "init SD: ACMD41 - card initialization...\n");
@@ -346,7 +346,7 @@ static int init_card_sd(struct card_info *c) {
     //
     //    C_Size      - 12 bits - [73:62]
     //    C_Size_Mult -  3 bits - [49:47]
-    //    Read_Bl_Len -  4 bits - [83:80] 
+    //    Read_Bl_Len -  4 bits - [83:80]
     //
     //    Capacity (bytes) = (C_Size + 1) * ( 2 ^ (C_Size_Mult + 2)) * (2 ^ Read_Bl_Len)
     //
@@ -358,7 +358,7 @@ static int init_card_sd(struct card_info *c) {
     //
     unsigned int Blocks;
     if ( (csd[0] & 0xc0) == 0) {
-        
+
         //Type 1 csd
         unsigned int C_Size      = ((csd[6] & 0x03) << 10) | (csd[7] << 2) | ((csd[8] >>6) & 0x03);
         unsigned int C_Size_Mult = ((csd[9] & 0x03) << 1) | ((csd[10] >> 7) & 0x01);
@@ -366,7 +366,7 @@ static int init_card_sd(struct card_info *c) {
         Blocks = ((C_Size + 1) * (1 << (C_Size_Mult + 2)) * (1 << Read_Bl_Len)) / 512;
 
     } else {
-        
+
         //Type 2 csd
         Blocks = (((csd[7] & 0x3F) << 16) | (csd[8] << 8) | csd[9]) * 1024;
     }
@@ -401,7 +401,7 @@ err_proto:
 /*-----------------------------------------------------------------------------
  * Initialize card
  *
- * Pre-condition: 
+ * Pre-condition:
  *
  *    none
  *
@@ -428,7 +428,7 @@ static int init_card(struct card_info **ret) {
     cli();
 
     // Create a card structure to track card information and zero it
-    c = kmalloc(sizeof(struct card_info), GFP_KERNEL); 
+    c = kmalloc(sizeof(struct card_info), GFP_KERNEL);
     if (!c) {
         LOG_ERR("init: memory allocation failure");
         rcode = -ENOMEM;
@@ -436,11 +436,11 @@ static int init_card(struct card_info **ret) {
     }
     memset(c, 0, sizeof(struct card_info));
 
-    // Clock frequency below 400KHz until card is fully initialized. 
+    // Clock frequency below 400KHz until card is fully initialized.
     // 380KHz allows for  margin of error in the spi delay routines.
     spi_freq_max(380);
 
-    // After insertion - card must be sent a minimum of 74 clock cycles 
+    // After insertion - card must be sent a minimum of 74 clock cycles
     // with CS de-asserted before it will accept a command. We send it
     // WAY more, because, since we can't power cycle the card, we might
     // be trying to recover one left in a funny state from previous use/errors.
@@ -481,7 +481,7 @@ static int init_card(struct card_info **ret) {
     restore_flags(flags);
     *ret = c;
     return rcode;
- 
+
     /* ----- Error handling ----- */
 err:
     if (c) kfree(c);
