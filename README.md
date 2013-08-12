@@ -8,7 +8,7 @@ Why kernel 2.4?
 - support WDS(Wireless distribution system) mode.
 - kernel 2.6 has a more bugs. ref [ticket #7768](https://dev.openwrt.org/ticket/7768) [ticket #9029](https://dev.openwrt.org/ticket/9029)
 
-Building OpenWrt Kamikaze from source
+Building OpenWrt Kamikaze
 ===================
 1. Install packages required by the OpenWrt Kamikaze buildsystem  [ref](http://wiki.openwrt.org/doc/howto/buildroot.exigence)
 
