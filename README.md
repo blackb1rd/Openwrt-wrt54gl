@@ -28,7 +28,7 @@ git clone https://github.com/rainb0wb1rd/Openwrt-wrt54gl.git
 make menuconfig
 ```
 
-5.Finally build Kamikaze
+5. Finally build Kamikaze
 ```
 make
 ```
