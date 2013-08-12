@@ -10,7 +10,7 @@ Why kernel 2.4?
 
 Building OpenWrt Kamikaze
 ===================
-1. Install packages required by the OpenWrt Kamikaze buildsystem  [ref](http://wiki.openwrt.org/doc/howto/buildroot.exigence)
+1. Install packages required by the OpenWrt Kamikaze buildsystem  [ref. http://wiki.openwrt.org/doc/howto/buildroot.exigence](http://wiki.openwrt.org/doc/howto/buildroot.exigence)
 
 2. Downloading Sources
 ```shell
