@@ -32,8 +32,3 @@ make menuconfig
 ```
 make
 ```
-
-Troubleshooting
-===================
-Building error with package Luci
-- removing `local variant` in file `build_dir/mipsel/luci-0.8.8/build/mkversion.sh`
