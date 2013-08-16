@@ -14,7 +14,7 @@ Building OpenWrt Kamikaze
 
 2. Downloading Sources
 ```shell
-git clone https://github.com/rainb0wb1rd/Openwrt-wrt54gl.git
+git clone https://github.com/blackb1rd/Openwrt-wrt54gl.git
 ```
 
 3. Downloading and Installing Feeds(Optional)
