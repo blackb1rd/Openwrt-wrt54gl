@@ -3,7 +3,7 @@
 # Protocol groups: chat ietf_proposed_standard
 # Wiki: http://www.protocolinfo.org/wiki/Jabber
 #
-# This pattern has been tested with Gaim and Gabber.  It is only tested 
+# This pattern has been tested with Gaim and Gabber.  It is only tested
 # with non-SSL mode Jabber with no proxies.
 
 # Thanks to Jan Hudec for some improvements.

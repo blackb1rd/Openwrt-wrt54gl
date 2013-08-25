@@ -3,7 +3,7 @@
  *
  * Copyright 2004, Broadcom Corporation
  * All Rights Reserved.
- * 
+ *
  * THIS SOFTWARE IS OFFERED "AS IS", AND BROADCOM GRANTS NO WARRANTIES OF ANY
  * KIND, EXPRESS OR IMPLIED, BY STATUTE, COMMUNICATION OR OTHERWISE. BROADCOM
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
@@ -159,7 +159,7 @@ int
 nvram_commit(void)
 {
 	int ret;
-	
+
 	if (nvram_fd < 0)
 		if ((ret = nvram_init(NULL)))
 			return ret;

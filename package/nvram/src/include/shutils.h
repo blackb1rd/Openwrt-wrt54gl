@@ -3,7 +3,7 @@
  *
  * Copyright 2004, Broadcom Corporation
  * All Rights Reserved.
- * 
+ *
  * THIS SOFTWARE IS OFFERED "AS IS", AND BROADCOM GRANTS NO WARRANTIES OF ANY
  * KIND, EXPRESS OR IMPLIED, BY STATUTE, COMMUNICATION OR OTHERWISE. BROADCOM
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
@@ -29,7 +29,7 @@ extern char * fd2str(int fd);
  */
 extern char * file2str(const char *path);
 
-/* 
+/*
  * Waits for a file descriptor to become available for reading or unblocked signal
  * @param	fd	file descriptor
  * @param	timeout	seconds to wait before timing out or 0 for no timeout
@@ -37,7 +37,7 @@ extern char * file2str(const char *path);
  */
 extern int waitfor(int fd, int timeout);
 
-/* 
+/*
  * Concatenates NULL-terminated list of arguments into a single
  * commmand and executes it
  * @param	argv	argument list
@@ -48,7 +48,7 @@ extern int waitfor(int fd, int timeout);
  */
 extern int _eval(char *const argv[], char *path, int timeout, pid_t *ppid);
 
-/* 
+/*
  * Concatenates NULL-terminated list of arguments into a single
  * commmand and executes it
  * @param	argv	argument list
@@ -56,7 +56,7 @@ extern int _eval(char *const argv[], char *path, int timeout, pid_t *ppid);
  */
 extern char * _backtick(char *const argv[]);
 
-/* 
+/*
  * Kills process whose PID is stored in plaintext in pidfile
  * @param	pidfile	PID file
  * @return	0 on success and errno on failure
@@ -185,8 +185,8 @@ extern int vsnprintf (char *, size_t, const char *, va_list);
 extern int snprintf(char *str, size_t count, const char *fmt, ...);
 extern char *strdup(const char *);
 extern char *strsep(char **stringp, char *delim);
-extern int strcasecmp(const char *s1, const char *s2); 
-extern int strncasecmp(const char *s1, const char *s2, size_t n); 
+extern int strcasecmp(const char *s1, const char *s2);
+extern int strncasecmp(const char *s1, const char *s2, size_t n);
 
 /* Neither are socket() and connect() */
 #include <sockLib.h>

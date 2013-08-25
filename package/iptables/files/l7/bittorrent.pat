@@ -5,7 +5,7 @@
 #
 # This pattern has been tested and is believed to work well.
 # It will, however, not work on bittorrent streams that are encrypted, since
-# it's impossible to match encrypted data (unless the encryption is extremely 
+# it's impossible to match encrypted data (unless the encryption is extremely
 # weak, like rot13 or something...).
 
 bittorrent

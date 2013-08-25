@@ -40,7 +40,7 @@ done
 # kill active ppp daemon and other processes
 config_get ifname "$cfg" ifname
 pids="$(head -n1 -q /var/run/${ifname}.pid /var/run/ppp-${cfg}.pid 2>/dev/null)"
-for pid in $pids; do 
+for pid in $pids; do
 	[ -d "/proc/$pid" ] && {
 		kill $pid
 		[ -d "/proc/$pid" ] && {

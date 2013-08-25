@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/sh
 # Copyright (C) 2008 John Crispin <blogic@openwrt.org>
 
 . /etc/functions.sh
@@ -33,12 +33,12 @@ load_policy() {
 
 create_zone() {
 	local exists
-	
+
 	[ "$1" == "loopback" ] && return
 
 	config_get exists $ZONE_LIST $1
 	[ -n "$exists" ] && return
-	config_set $ZONE_LIST $1 1 
+	config_set $ZONE_LIST $1 1
 
 	$IPTABLES -N zone_$1
 	$IPTABLES -N zone_$1_MSSFIX
@@ -80,8 +80,8 @@ addif() {
 	$IPTABLES -I zone_${zone}_ACCEPT 1 -i "$ifname" -j ACCEPT
 	$IPTABLES -I zone_${zone}_DROP 1 -i "$ifname" -j DROP
 	$IPTABLES -I zone_${zone}_REJECT 1 -i "$ifname" -j reject
-	$IPTABLES -I zone_${zone}_nat 1 -t nat -o "$ifname" -j MASQUERADE 
-	$IPTABLES -I PREROUTING 1 -t nat -i "$ifname" -j zone_${zone}_prerouting 
+	$IPTABLES -I zone_${zone}_nat 1 -t nat -o "$ifname" -j MASQUERADE
+	$IPTABLES -I PREROUTING 1 -t nat -i "$ifname" -j zone_${zone}_prerouting
 	$IPTABLES -A forward -i "$ifname" -j zone_${zone}_forward
 	uci_set_state firewall core "${network}_ifname" "$ifname"
 	uci_set_state firewall core "${network}_zone" "$zone"
@@ -102,8 +102,8 @@ delif() {
 	$IPTABLES -D zone_${zone}_ACCEPT -i "$ifname" -j ACCEPT
 	$IPTABLES -D zone_${zone}_DROP -i "$ifname" -j DROP
 	$IPTABLES -D zone_${zone}_REJECT -i "$ifname" -j reject
-	$IPTABLES -D zone_${zone}_nat -t nat -o "$ifname" -j MASQUERADE 
-	$IPTABLES -D PREROUTING -t nat -i "$ifname" -j zone_${zone}_prerouting 
+	$IPTABLES -D zone_${zone}_nat -t nat -o "$ifname" -j MASQUERADE
+	$IPTABLES -D PREROUTING -t nat -i "$ifname" -j zone_${zone}_prerouting
 	$IPTABLES -D forward -i "$ifname" -j zone_${zone}_forward
 	uci_revert_state firewall core "${network}_ifname"
 	uci_revert_state firewall core "${network}_zone"
@@ -147,17 +147,17 @@ fw_defaults() {
 	load_policy "$1"
 
 	echo 1 > /proc/sys/net/ipv4/tcp_syncookies
-	for f in /proc/sys/net/ipv4/conf/*/accept_redirects 
+	for f in /proc/sys/net/ipv4/conf/*/accept_redirects
 	do
 		echo 0 > $f
 	done
-	for f in /proc/sys/net/ipv4/conf/*/accept_source_route 
+	for f in /proc/sys/net/ipv4/conf/*/accept_source_route
 	do
 		echo 0 > $f
-	done                                                                   
-	
+	done
+
 	uci_revert_state firewall core
-	uci_set_state firewall core "" firewall_state 
+	uci_set_state firewall core "" firewall_state
 
 	$IPTABLES -P INPUT DROP
 	$IPTABLES -P OUTPUT DROP
@@ -184,7 +184,7 @@ fw_defaults() {
 	config_get syn_rate $1 syn_rate
 	config_get syn_burst $1 syn_burst
 	[ "$syn_flood" == "1" ] && load_synflood $syn_rate $syn_burst
-	
+
 	echo "Adding custom chains"
 	fw_custom_chains
 
@@ -223,7 +223,7 @@ fw_zone() {
 }
 
 fw_rule() {
-	local src 
+	local src
 	local src_ip
 	local src_mac
 	local src_port
@@ -255,7 +255,7 @@ fw_rule() {
 	dest_port_last=${dest_port#*-}
 	[ "$dest_port_first" -ne "$dest_port_last" ] && { \
 		dest_port="$dest_port_first:$dest_port_last"; }
-	
+
 	ZONE=input
 	TARGET=$target
 	[ -z "$target" ] && target=DROP
@@ -270,7 +270,7 @@ fw_rule() {
 			${src_mac:+-m mac --mac-source $src_mac} \
 			${dest_ip:+-d $dest_ip} \
 			${dest_port:+--dport $dest_port} \
-			-j $TARGET 
+			-j $TARGET
 	}
 	[ "$proto" == "tcpudp" -o -z "$proto" ] && {
 		proto=tcp
@@ -303,7 +303,7 @@ fw_redirect() {
 	local dest_ip
 	local dest_port dest_port2
 	local proto
-	
+
 	config_get src $1 src
 	config_get src_ip $1 src_ip
 	config_get src_port $1 src_port
@@ -314,7 +314,7 @@ fw_redirect() {
 	config_get proto $1 proto
 	[ -z "$src" -o -z "$dest_ip" ] && { \
 		echo "redirect needs src and dest_ip"; return ; }
-	
+
 	src_port_first=${src_port%-*}
 	src_port_last=${src_port#*-}
 	[ "$src_port_first" -ne "$src_port_last" ] && { \
@@ -347,7 +347,7 @@ fw_redirect() {
 			${src_port:+--sport $src_port} \
 			${dest_port2:+--dport $dest_port2} \
 			${src_mac:+-m mac --mac-source $src_mac} \
-			-j ACCEPT 
+			-j ACCEPT
 	}
 	[ "$proto" == "tcpudp" -o -z "$proto" ] && {
 		proto=tcp
@@ -381,7 +381,7 @@ fw_custom_chains() {
 	$IPTABLES -N forwarding_rule
 	$IPTABLES -N prerouting_rule -t nat
 	$IPTABLES -N postrouting_rule -t nat
-			
+
 	$IPTABLES -A INPUT -j input_rule
 	$IPTABLES -A OUTPUT -j output_rule
 	$IPTABLES -A FORWARD -j forwarding_rule

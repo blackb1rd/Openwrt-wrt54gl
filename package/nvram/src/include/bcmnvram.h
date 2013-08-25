@@ -3,7 +3,7 @@
  *
  * Copyright 2004, Broadcom Corporation
  * All Rights Reserved.
- * 
+ *
  * THIS SOFTWARE IS OFFERED "AS IS", AND BROADCOM GRANTS NO WARRANTIES OF ANY
  * KIND, EXPRESS OR IMPLIED, BY STATUTE, COMMUNICATION OR OTHERWISE. BROADCOM
  * SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
@@ -53,7 +53,7 @@ extern void nvram_exit(void);
  */
 extern char * nvram_get(const char *name);
 
-/* 
+/*
  * Get the value of an NVRAM variable.
  * @param	name	name of variable to get
  * @return	value of variable or NUL if undefined

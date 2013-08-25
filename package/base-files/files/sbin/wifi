@@ -56,7 +56,7 @@ wifi_fixup_hwmode() {
 		;;
 		*)
 			hwmode=
-			if [ "${channel:-0}" -gt 0 ]; then 
+			if [ "${channel:-0}" -gt 0 ]; then
 				if [ "${channel:-0}" -gt 14 ]; then
 					hwmode=a
 				else
@@ -139,7 +139,7 @@ scan_wifi() {
 			;;
 			wifi-iface)
 				config_get device "$CONFIG_SECTION" device
-				config_get vifs "$device" vifs 
+				config_get vifs "$device" vifs
 				append vifs "$CONFIG_SECTION"
 				config_set "$device" vifs "$vifs"
 			;;
