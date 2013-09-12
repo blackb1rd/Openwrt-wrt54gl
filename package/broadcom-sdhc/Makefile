@@ -12,46 +12,46 @@ PKG_NAME:=broadcom-sdhc
 PKG_VERSION:=2.0.2
 PKG_RELEASE:=1
 
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=http://www.4mul8.ca/openwrt/source/broadcom-sdhc-2.0.2
+PKG_MD5SUM:=a6f760b3fe4cccc1749700e5d57faf5e
+PKG_CAT:=zcat
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+
 include $(INCLUDE_DIR)/package.mk
 
-MAKEFLAGS_KMOD:= -C "$(LINUX_DIR)" \
-				CROSS_COMPILE="$(TARGET_CROSS)" \
-				ARCH="$(LINUX_KARCH)" \
-				PATH="$(TARGET_PATH)" \
-				SUBDIRS="$(PKG_BUILD_DIR)"
-
 define KernelPackage/broadcom-sdhc
-	SUBMENU:=Other modules
-	DEPENDS:=@TARGET_brcm_2_4
-	TITLE:= MMC/SD/SDHC card driver - Linksys WRT54G/GS/GL
-	VERSION:=$(LINUX_VERSION)-$(BOARD)-$(PKG_VERSION)-$(PKG_RELEASE)
-	FILES:=\
-		$(PKG_BUILD_DIR)/sdhc.$(LINUX_KMOD_SUFFIX)\
-		$(PKG_BUILD_DIR)/sdhcd.$(LINUX_KMOD_SUFFIX)
-endef
+  SUBMENU:=Other modules
+  DEPENDS:=@TARGET_brcm_2_4
+  TITLE:= MMHC/SDHC card driver - Linksys WRT54G/GS/GL
+  VERSION:=$(LINUX_VERSION)-$(BOARD)-$(PKG_VERSION)-$(PKG_RELEASE)
+  FILES:=\
+	$(PKG_BUILD_DIR)/sdhc.$(LINUX_KMOD_SUFFIX)\
+	$(PKG_BUILD_DIR)/sdhcd.$(LINUX_KMOD_SUFFIX)
+  URL:=http://www.4mul8.ca/openwrt
+endef 
 
 define KernelPackage/broadcom-sdhc/description
-		Driver for Linksys WRT54G/GS/GL MM/SD card modification.
-		Supports standard and high capacity cards.
-		May work for other broadcom based routers (Buffalo, etc).
-endef
-
-define Build/Prepare
-		mkdir -p $(PKG_BUILD_DIR)
-		$(CP) ./files/src/* $(PKG_BUILD_DIR)/
+	Driver for Linksys WRT54G/GS/GL MM/SD card modification.
+	Supports standard and high capacity cards.
+	May work for other broadcom based routers (Buffalo, etc).
 endef
 
 define Build/Compile
-		$(MAKE) $(MAKEFLAGS_KMOD) \
-			modules
+	$(MAKE) -C "$(LINUX_DIR)" \
+	CROSS_COMPILE="$(TARGET_CROSS)" \
+	ARCH="$(LINUX_KARCH)" \
+	SUBDIRS="$(PKG_BUILD_DIR)" \
+	modules
 endef
 
 define KernelPackage/broadcom-sdhc/install
-		mkdir -p $(1)/etc/init.d
-		install -m0755 ./files/sdcard.init $(1)/etc/init.d/sdcard
-		install -m0644 ./files/sdcard.conf $(1)/etc/sdcard.conf
-		$(CP) $(PKG_BUILD_DIR)/sdhc.o $(1)/lib/modules/$(LINUX_VERSION)/
-		$(CP) $(PKG_BUILD_DIR)/sdhcd.o $(1)/lib/modules/$(LINUX_VERSION)/
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/sdcard $(1)/etc/init.d/sdcard
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/sdcard.conf $(1)/etc/sdcard.conf
+	$(CP) $(PKG_BUILD_DIR)/sdhc.o $(1)/lib/modules/$(LINUX_VERSION)/
+	$(CP) $(PKG_BUILD_DIR)/sdhcd.o $(1)/lib/modules/$(LINUX_VERSION)/
 endef
 
 $(eval $(call KernelPackage,broadcom-sdhc))
