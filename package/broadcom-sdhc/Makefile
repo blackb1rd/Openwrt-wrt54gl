@@ -14,7 +14,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.4mul8.ca/openwrt/source/broadcom-sdhc-2.0.2
-PKG_MD5SUM:=a6f760b3fe4cccc1749700e5d57faf5e
+PKG_MD5SUM:=6238463bce27e64829eda1d88f1a7edd
 PKG_CAT:=zcat
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
