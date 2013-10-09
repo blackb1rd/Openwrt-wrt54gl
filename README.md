@@ -2,11 +2,19 @@ Openwrt-wrt54gl
 ===================
 This project based on kamikaze(revision 18801) and development for kernel 2.4(brcm-2.4)
 
+How different original kamikaze?
+===================
+- support Secure Digital High Capacity (SDHC).
+- upgrade binutils to new version.
+- fix bug compile error in luci package.
+
 Why kernel 2.4?
 ===================
 - support repeater mode.
 - support WDS(Wireless distribution system) mode.
-- kernel 2.6 has a more bugs. ref [ticket #7768](https://dev.openwrt.org/ticket/7768) [ticket #9029](https://dev.openwrt.org/ticket/9029)
+- kernel 2.6(brcm47xx) can't mount SDcard on extroot [ticket #7768](https://dev.openwrt.org/ticket/7768).
+- kernel 2.6(brcm47xx) has a problem with driver wireless.
+- kernel 2.6(brcm47xx) has a more bugs. ref [ticket #9029](https://dev.openwrt.org/ticket/9029) [ticket #14114](https://dev.openwrt.org/ticket/14114) [ticket #12767](https://dev.openwrt.org/ticket/12767)
 
 Building OpenWrt Kamikaze
 ===================
