@@ -8,13 +8,13 @@ How different original kamikaze?
 - upgrade binutils to new version.
 - fix bug compile error in luci package.
 
-Why kernel 2.4?
+Why brcm-2.4?
 ===================
 - support repeater mode.
 - support WDS(Wireless distribution system) mode.
-- kernel 2.6(brcm47xx) can't mount SDcard on extroot [ticket #7768](https://dev.openwrt.org/ticket/7768).
-- kernel 2.6(brcm47xx) has a problem with driver wireless.
-- kernel 2.6(brcm47xx) has a more bugs. ref [ticket #9029](https://dev.openwrt.org/ticket/9029) [ticket #14114](https://dev.openwrt.org/ticket/14114) [ticket #12767](https://dev.openwrt.org/ticket/12767)
+- brcm47xx can't mount SDcard on extroot [ticket #7768](https://dev.openwrt.org/ticket/7768).
+- brcm47xx has a problem with driver wireless.
+- brcm47xx has a more bugs. ref [ticket #9029](https://dev.openwrt.org/ticket/9029) [ticket #14114](https://dev.openwrt.org/ticket/14114) [ticket #12767](https://dev.openwrt.org/ticket/12767)
 
 Building OpenWrt Kamikaze
 ===================
