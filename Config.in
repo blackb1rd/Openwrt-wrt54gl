@@ -18,49 +18,49 @@ menu "Target Images"
 		default n
 		depends LINUX_2_6
 		help
-		  Embed the rootfs into the kernel (initramfs)
+			Embed the rootfs into the kernel (initramfs)
 
 	config TARGET_ROOTFS_JFFS2
 		bool "jffs2"
 		default y if USES_JFFS2
 		depends !TARGET_ROOTFS_INITRAMFS
 		help
-		  Build a jffs2 root filesystem
+			Build a jffs2 root filesystem
 
 	config TARGET_ROOTFS_SQUASHFS
 		bool "squashfs"
 		default y if USES_SQUASHFS
 		depends !TARGET_ROOTFS_INITRAMFS
 		help
-		  Build a squashfs-lzma root filesystem
+			Build a squashfs-lzma root filesystem
 
 	config TARGET_ROOTFS_TGZ
 		bool "tgz"
 		default y if USES_TGZ
 		depends !TARGET_ROOTFS_INITRAMFS
 		help
-		  Build a compressed tar archive of the the root filesystem
-		  
+			Build a compressed tar archive of the the root filesystem
+
 	config TARGET_ROOTFS_CPIOGZ
 		bool "cpiogz"
 		default y if USES_CPIOGZ
 		depends !TARGET_ROOTFS_INITRAMFS
 		help
-		  Build a compressed cpio archive of the the root filesystem
-		  
+			Build a compressed cpio archive of the the root filesystem
+
 	config TARGET_ROOTFS_EXT2FS
 		bool "ext2"
 		default y if USES_EXT2
 		depends !TARGET_ROOTFS_INITRAMFS
 		help
-		  Ext2 file system with some free space for uml images
+			Ext2 file system with some free space for uml images
 
-	config TARGET_ROOTFS_ISO 
-		bool "iso" 
-		default n 
-		depends TARGET_ROOTFS_INITRAMFS && TARGET_x86 
-		help 
-		  Create some bootable ISO image 
+	config TARGET_ROOTFS_ISO
+		bool "iso"
+		default n
+		depends TARGET_ROOTFS_INITRAMFS && TARGET_x86
+		help
+			Create some bootable ISO image
 
 comment "Image Options"
 
@@ -143,7 +143,7 @@ config BUILD_SUFFIX
 		Build suffix to append to the BUILD_DIR variable, i.e: build_dir_suffix
 
 config TAR_VERBOSITY
-	bool 
+	bool
 	prompt "Tar verbose" if BUILDOPTS
 	default n
 
