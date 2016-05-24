@@ -1,3 +1,9 @@
+THIS PROJECT IS OBSOLETE
+========================
+- I do not have time to do this.
+- I need more money for my poor life.
+- I did not use wrt54gl anymore.
+
 Openwrt-wrt54gl
 ===================
 This project based on kamikaze(revision 18801) and was developed for kernel 2.4(brcm-2.4)
